@@ -64,9 +64,9 @@ def load_responses(filename):
             "как дела|как жизнь|что нового|как ты": "Спасибо, что спросили! Я всего лишь искусственный интеллект, но моя задача – помогать вам. Чем могу быть полезен?",
             "какая погода|погода сегодня": "Извините, но я не могу предоставить вам актуальную информацию о погоде. Попробуйте использовать сервисы, предназначенные для этого.",
             "какой сегодня день|какое число": "Сегодня " + datetime.now().strftime("%d-%m-%Y"),
-            "что такое (.*?)\?": "Определение для {0} можно найти на Википедии или других источниках знаний.",
+            "что такое (.*?)\s*\?": "Определение для '{0}' можно найти на Википедии или других источниках знаний.",
             "как доехать|как пройти|как попасть": "Мне жаль, но я не могу предоставить маршрут. Рекомендую использовать карты Google или Яндекс.Карты для определения маршрута.",
-            "default": "Извините, я не понимаю эту фразу. Пожалуйста, попробуйте сформулировать по-другому."
+            "default": "Извините, я не понимаю эту фразу."
             }
 
 # Функция сохранения данных в файл
@@ -90,20 +90,21 @@ def teach_bot(phrase, response, responses):
 
 # Функция взаимодействия с ботом
 def interact_with_bot(responses, filename):
-    while True:
+    flag = True
+    while flag:
         user_input = input("Пользователь: ")
         if user_input.lower() == "выход":
             print("Чатбот: Всего доброго!")
-            break
+            flag = False
         response = find_response(user_input, responses)
-
-        if response == responses["default"]:
-            print("Чатбот:", response)
-            teach = input("Пользователь: Как мне на это ответить? ")
-            teach_bot(user_input, teach, responses)
-            save_responses(responses, filename)
-        else:
-            print("Чатбот:", response)
+        if flag:
+            if response == responses["default"]:
+                print("Чатбот:", response)
+                teach = input("Пользователь: Как мне на это ответить? ")
+                teach_bot(user_input, teach, responses)
+                save_responses(responses, filename)
+            else:
+                print("Чатбот:", response)
 
 # Запуск бота
 print("\nЗадача 3")
